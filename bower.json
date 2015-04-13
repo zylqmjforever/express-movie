@@ -1,0 +1,19 @@
+{
+  "name": "express-movie",
+  "version": "0.0.1",
+  "homepage": "https://github.com/yuanxiaowa/express-movie",
+  "authors": [
+    "ody <yuanxiaowa@qq.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4"
+  }
+}

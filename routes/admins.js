@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var Movie = require('../models/movie');
+var _ = require('underscore');
 
 router.get('/movie', function(req, res, next) {
 	res.render('admin', {
@@ -17,24 +19,65 @@ router.get('/movie', function(req, res, next) {
 	});
 });
 
-router.get('/list', function(req, res, next) {
-	var movies = [];
-	for(var i = 0; i < 10; i++) {
-		movies.push({
-			_id: i + 1,
-			title: '机械战警',
-			doctor: '何塞。帕迪里亚',
-			country: '美国',
-			year: 2014,
-			poster: 'http://img.mukewang.com/5513e23300011eab06000338-300-170.jpg',
-			language: '英语',
-			flash: 'http://player.youku.com/player.php/sid/XNjA1Njc0NTUy/v.swf',
-			summary: '发动机是克拉夫速度较快拉升幅度阿道夫艰苦拉萨大家分厘卡圣诞节分厘卡是啊打发时间啦空手道解放多少克拉夫'
+router.get('/update/:id', function(req, res) {
+	console.log(req.params);
+	var id = req.params.id;
+	if (id) {
+		Movie.findById(id, function(err, movie) {
+			res.render('admin', {
+				title: 'imooc 后台更新页',
+				movie: movie
+			});
+		})
+	}
+});
+
+router.post('/movie/new', function(req, res) {
+	var id = req.body.movie.id,
+		movieObj = req.body.movie,
+		_movie;
+	if (id !== undefined) {
+		Movie.findById({id: id}, function(err, movie) {
+			if (err) {
+				console.log(err);
+			}
+			_movie = _.extend(movie, movieObj);
+			_movie.save(function(err, movie) {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect('/movie/' + movie.id);
+			});
+		});
+	} else {
+		_movie = new Movie({
+			doctor: movieObj.doctor,
+			title: movieObj.title,
+			country: movieObj.country,
+			language: movieObj.language,
+			year: movieObj.year,
+			poster: movieObj.poster,
+			summary: movieObj.summary,
+			flash: movieObj.flash
+		});
+		_movie.save(function(err, movie) {
+			if (err) {
+				console.log(err);
+			}
+			res.redirect('/movie/' + movie.id);
 		});
 	}
-	res.render('list', {
-		title: 'imooc 列表页',
-		movies: movies
+});
+
+router.get('/list', function(req, res, next) {
+	Movie.fetch(function(err, movies) {
+		if (err) {
+			console.log(err);
+		}
+		res.render('list', {
+			title: 'imooc 列表页',
+			movies: movies
+		});
 	});
 });
 
