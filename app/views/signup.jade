@@ -1,0 +1,17 @@
+extends layout-base
+
+block contents
+	.modal-dialog
+		.modal-content
+			form(method="POST" action="/user/signup")
+				.modal-header 注册
+				.modal-body
+					.form-group
+						label(for="signupName") 用户名
+						input#signupName.form-control(name="user[name]")
+					.form-group
+						label(for="signupPassword") 密码
+						input#signupPassword.form-control(name="user[password]" type="password")
+				.modal-footer
+					a.pull-left(href="/user/signin") 登录
+					button.btn.btn-success 提交
